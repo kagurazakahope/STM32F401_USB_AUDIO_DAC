@@ -46,12 +46,13 @@
 #include "usbd_desc.h"
 #include "usbd_conf.h"
 
-#define USBD_VID                      0x6666 // prototyping 
-#define USBD_PID                      0x1234 // random value
+#define USBD_VID                      0xFEED // prototyping
+#define USBD_PID                      0x0001 // random value
+#define USBD_REV                      0x0100
 #define USBD_LANGID_STRING            0x409
-#define USBD_MANUFACTURER_STRING      "STM32 Black Pill"
-#define USBD_PRODUCT_HS_STRING        "PCM5102A DAC"
-#define USBD_PRODUCT_FS_STRING        "PCM5102A DAC"
+#define USBD_MANUFACTURER_STRING      "STM32F4"
+#define USBD_PRODUCT_HS_STRING        "K.H DAC"
+#define USBD_PRODUCT_FS_STRING        "K.H DAC"
 #define USBD_CONFIGURATION_HS_STRING  "AUDIO Config"
 #define USBD_INTERFACE_HS_STRING      "AUDIO Interface"
 #define USBD_CONFIGURATION_FS_STRING  "AUDIO Config"
@@ -96,8 +97,8 @@ __ALIGN_BEGIN   uint8_t USBD_DeviceDesc[USB_LEN_DEV_DESC] __ALIGN_END = {
   HIBYTE(USBD_VID),           /* idVendor */
   LOBYTE(USBD_PID),           /* idVendor */
   HIBYTE(USBD_PID),           /* idVendor */
-  0x00,                       /* bcdDevice version 1.00 */
-  0x01,
+  LOBYTE(USBD_REV),           /* bcdDevice version */
+  HIBYTE(USBD_REV),
   USBD_IDX_MFC_STR,           /* Index of manufacturer string */
   USBD_IDX_PRODUCT_STR,       /* Index of product string */
   USBD_IDX_SERIAL_STR,        /* Index of serial number string */
