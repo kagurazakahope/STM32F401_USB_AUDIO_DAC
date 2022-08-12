@@ -27,21 +27,27 @@ int main(void) {
   USBD_AUDIO_RegisterInterface(&USBD_Device, &USBD_AUDIO_fops);
   // Start Device Process
   USBD_Start(&USBD_Device);
+
+  uint32_t last_frequency = 0;
   
   while (1) {
-    switch (audio_status.frequency) {
-      case 44100:
-          BSP_LED_Set(LED_4);
-          break;
-      case 48000:
-          BSP_LED_Set(LED_8);
-          break;
-      case 96000:
-          BSP_LED_Set(LED_9);
-          break;
-      default:
-          BSP_LED_Set(LED_NONE);
-          break;
+    if (last_frequency != audio_status.frequency)
+    {
+      printMsg("Frequency changed from %d to %d\r\n", last_frequency, audio_status.frequency);
+      switch (audio_status.frequency) {
+        case 44100:
+            BSP_LED_Set(LED_4);
+            break;
+        case 48000:
+            BSP_LED_Set(LED_8);
+            break;
+        case 96000:
+            BSP_LED_Set(LED_9);
+            break;
+        default:
+            BSP_LED_Set(LED_NONE);
+            break;
+      }
     }
 
     HAL_Delay(100);
