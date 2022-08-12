@@ -8,22 +8,25 @@
 #include "stm32f4xx_hal.h"
 
 typedef enum {
- LED_RED = 0,
- LED_GREEN,
- LED_BLUE
+ LED_4 = 0,
+ LED_8,
+ LED_9,
+ LED_NONE,
+ LED_MAX
 } Led_TypeDef;
+
+#define LED_NUMBER_PIN_COUNT 7
+
+uint16_t led_number_pins[LED_NUMBER_PIN_COUNT];
+
+int led_num_status[LED_MAX][LED_NUMBER_PIN_COUNT];
 
 
 extern volatile uint32_t BtnPressed; // PA0
 
-// 3 Leds are connected to MCU directly on PB3, PB6, PB9
 #define LED_GPIO_PORT                   GPIOB
 
 #define LED_GPIO_CLK_ENABLE()           __HAL_RCC_GPIOB_CLK_ENABLE()
-
-#define LED_RED_PIN                      GPIO_PIN_3
-#define LED_GREEN_PIN                    GPIO_PIN_6
-#define LED_BLUE_PIN                     GPIO_PIN_9
 
 #define ONBOARD_LED_PORT				GPIOC
 #define ONBOARD_LED_PIN					GPIO_PIN_13
@@ -34,10 +37,7 @@ void bsp_init(void);
 
 void BSP_LED_Init(void);
 void BSP_LED_DeInit(void);
-void BSP_LED_Off(Led_TypeDef Led);
-void BSP_LED_On(Led_TypeDef Led);
-void BSP_LED_Off(Led_TypeDef Led);
-void BSP_LED_Toggle(Led_TypeDef Led);
+void BSP_LED_Set(Led_TypeDef);
 void BSP_PB_Init(void);
 void BSP_OnboardLED_On(void);
 void BSP_OnboardLED_Off(void);

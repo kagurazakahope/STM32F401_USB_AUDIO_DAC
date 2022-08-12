@@ -8,7 +8,9 @@
 * Supports 24-bit audio streams with Fs = 44.1kHz, 48kHz or 96kHz
 * USB Audio Volume (0dB to -96dB, 3dB steps) and Mute control 
 * I2S master output with I2S Philips standard 24/32 data frame
-* Uses inexpensive Aliexpress-sourced STM32F4xx "Black Pill" and PCM5102A modules.
+* Uses inexpensive Aliexpress-sourced STM32F4xx (I saw several models on Taobao around 10+ RMB with 22x2 pins they all should work).
+* Uses inexpensive ES9023 DAC bus or self powered (with power board).
+* Optional power supply board and amplifier
 * Build support (Makefile option) for STM32F401CCU6 and STM32F411CEU6 boards 
 * Optional MCLK output generation on STM32F411
 
@@ -47,30 +49,38 @@ When the USB Audio DAC device is enumerated on plug-in, it reports its capabilit
 	* external R,G,B LEDs indicate sampling frequency
 	* On-board LED for diagnostic status
 	* UART2 serial interface for diagnostic information
-* PCM5102A I2S DAC module
-	* configured to generate MCK internally 
-	* 100uF 6.3V tantalum capacitor across VCC and ground 
+* ES9023 I2S DAC module
+	* asynchronized mode with 50MHz MCK
 ```
-F4xx    PCM5102A    LED     UART2   Description
+F4xx    ES9023      Description
 --------------------------------------------------------------------
-5V      VCC
--       3V3
 GND     GND
-GND     FLT                         Filter Select = Normal latency
-GND     DMP                         De-emphasis off
-GND     SCL                         Generate I2S_MCK internally
-B13     BCK                         I2S_BCK (Bit Clock)
-B15     DIN                         I2S_SDI (Data Input)
-B12     LCK                         I2S_WS (LR Clock)
-GND     FMT                         Format = I2S
-B8      XMT                         Mute control
-A6      -                           I2S_MCK (not used)
+B13     BCK         I2S_BCK (Bit Clock)
+B15     SDI         I2S_SDI (Data Input)
+B12     LRCK        I2S_WS (LR Clock)
+GND     DIF         Format = I2S
+A8      MUTE_B      Mute control
+A6      -           I2S_MCK (not used)
+
+
+LED 7/8 bits for frequence display
+4 = 44.1kHz
+8 = 48kHz
+9 = 96kHz
+F4xx    LED pin
 --------------------------------------------------------------------
-B3                 RED              Fs = 96kHz
-B6                 GRN              Fs = 48kHz
-B9                 BLU              Fs = 44.1kHz
-C13             on-board            Diagnostic
+B0
+B1
+B3
+B4
+B5
+B6
+B7
+
+C13     on-board    Diagnostic
 --------------------------------------------------------------------
+A11                        USB_D-   USB data
+A12                        USB_D+
 A2                         TX       Serial debug
 A3                         RX
 GND                        GND

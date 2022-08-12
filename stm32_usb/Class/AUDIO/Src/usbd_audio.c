@@ -100,7 +100,7 @@ __ALIGN_BEGIN static uint8_t USBD_AUDIO_CfgDesc[USB_AUDIO_CONFIG_DESC_SIZ] __ALI
     0x01, /* bConfigurationValue */
     0x00, /* iConfiguration */
     0x80, /* bmAttributes  BUS Powered (0xC0 = self-powered) */
-    0x32, /* bMaxPower = 50*2mA = 100 mA*/
+    0xfa, /* bMaxPower = 250*2mA = 500 mA*/
     // 09 byte
 
     // USB Speaker Standard interface descriptor

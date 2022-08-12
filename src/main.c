@@ -31,24 +31,16 @@ int main(void) {
   while (1) {
     switch (audio_status.frequency) {
       case 44100:
-          BSP_LED_Off(LED_RED);
-          BSP_LED_Off(LED_GREEN);
-          BSP_LED_On(LED_BLUE);
+          BSP_LED_Set(LED_4);
           break;
       case 48000:
-          BSP_LED_Off(LED_RED);
-          BSP_LED_On(LED_GREEN);
-          BSP_LED_Off(LED_BLUE);
+          BSP_LED_Set(LED_8);
           break;
       case 96000:
-          BSP_LED_On(LED_RED);
-          BSP_LED_Off(LED_GREEN);
-          BSP_LED_Off(LED_BLUE);
+          BSP_LED_Set(LED_9);
           break;
       default:
-          BSP_LED_Off(LED_RED);
-          BSP_LED_Off(LED_GREEN);
-          BSP_LED_Off(LED_BLUE);
+          BSP_LED_Set(LED_NONE);
           break;
     }
 

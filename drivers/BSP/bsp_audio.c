@@ -274,7 +274,7 @@ __weak void BSP_AUDIO_OUT_Error_CallBack(void){}
     // PB12  - I2S2_WS
     // PB13  - I2S2_CK
     // PB15  - I2S2_SD
-    // PB8   - PCM5102A mute
+    // PA8   - ES9023 mute
   */
 __weak void BSP_AUDIO_OUT_MspInit(I2S_HandleTypeDef *hi2s, void *Params)
 {
@@ -301,7 +301,7 @@ __weak void BSP_AUDIO_OUT_MspInit(I2S_HandleTypeDef *hi2s, void *Params)
     GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-    // PCM5102A mute gpio pin interface (mute =0, unmute=1)
+    // ES9023 mute gpio pin interface (mute =0, unmute=1)
 	AUDIO_MUTE_PORT_ENABLE();
 	GPIO_InitTypeDef  gpio_init_structure = {0};
 	gpio_init_structure.Pin   = AUDIO_MUTE_PIN;

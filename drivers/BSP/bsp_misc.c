@@ -3,14 +3,17 @@
 
 void Error_Handler(void);
 
-uint32_t GPIO_PIN[3] = {
-	LED_RED_PIN,
-    LED_GREEN_PIN,
-    LED_BLUE_PIN
-};
-
-
 volatile uint32_t BtnPressed = 0;
+
+uint16_t led_number_pins[LED_NUMBER_PIN_COUNT] = {
+    GPIO_PIN_0,
+    GPIO_PIN_1,
+    GPIO_PIN_3,
+    GPIO_PIN_4,
+    GPIO_PIN_5,
+    GPIO_PIN_6,
+    GPIO_PIN_7,
+};
 
 void bsp_init(void) {
 	BSP_PB_Init();
@@ -19,16 +22,17 @@ void bsp_init(void) {
 
 void BSP_LED_Init(void) {
 	GPIO_InitTypeDef  gpio_init_structure = {0};
-	gpio_init_structure.Pin   = LED_RED_PIN | LED_GREEN_PIN | LED_BLUE_PIN;
+	for (int i = 0; i < LED_NUMBER_PIN_COUNT; ++i)
+		gpio_init_structure.Pin |= led_number_pins[i];
 	gpio_init_structure.Mode  = GPIO_MODE_OUTPUT_PP;
 	gpio_init_structure.Pull  = GPIO_NOPULL;
 	gpio_init_structure.Speed = GPIO_SPEED_LOW;
 
 	LED_GPIO_CLK_ENABLE();
 	HAL_GPIO_Init(LED_GPIO_PORT, &gpio_init_structure);
-	HAL_GPIO_WritePin(LED_GPIO_PORT, LED_RED_PIN, GPIO_PIN_SET); // R,G,B LEDs are active low
-	HAL_GPIO_WritePin(LED_GPIO_PORT, LED_GREEN_PIN, GPIO_PIN_SET);
-	HAL_GPIO_WritePin(LED_GPIO_PORT, LED_BLUE_PIN, GPIO_PIN_SET);
+
+	for (int i = 0; i < LED_NUMBER_PIN_COUNT; ++i)
+		HAL_GPIO_WritePin(LED_GPIO_PORT, led_number_pins[i], GPIO_PIN_SET); // LEDs are active low
 
 	gpio_init_structure.Pin   = ONBOARD_LED_PIN;
 	ONBOARD_LED_GPIO_CLK_ENABLE();
@@ -38,13 +42,13 @@ void BSP_LED_Init(void) {
 
 
 void BSP_LED_DeInit(void){
-	HAL_GPIO_WritePin(LED_GPIO_PORT, LED_RED_PIN, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(LED_GPIO_PORT, LED_GREEN_PIN, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(LED_GPIO_PORT, LED_BLUE_PIN, GPIO_PIN_RESET);
+	for (int i = 0; i < LED_NUMBER_PIN_COUNT; ++i)
+		HAL_GPIO_WritePin(LED_GPIO_PORT, led_number_pins[i], GPIO_PIN_RESET);
 	HAL_GPIO_WritePin(ONBOARD_LED_PORT, ONBOARD_LED_PIN, GPIO_PIN_RESET);
 
 	GPIO_InitTypeDef  gpio_init_structure = {0};
-	gpio_init_structure.Pin   = LED_RED_PIN | LED_GREEN_PIN | LED_BLUE_PIN;
+	for (int i = 0; i < LED_NUMBER_PIN_COUNT; ++i)
+		gpio_init_structure.Pin |= led_number_pins[i];
 	HAL_GPIO_DeInit(LED_GPIO_PORT, gpio_init_structure.Pin);
 
 	gpio_init_structure.Pin   = ONBOARD_LED_PIN;
@@ -64,24 +68,9 @@ void BSP_OnboardLED_Toggle(void) {
     HAL_GPIO_TogglePin(ONBOARD_LED_PORT, ONBOARD_LED_PIN);
 	}
 
-void BSP_LED_On(Led_TypeDef Led) {
-  if (Led < 3)  {
-     HAL_GPIO_WritePin(LED_GPIO_PORT, GPIO_PIN[Led], GPIO_PIN_RESET);
-  }
-}
-
-
-void BSP_LED_Off(Led_TypeDef Led){
-  if (Led < 3)  {
-    HAL_GPIO_WritePin(LED_GPIO_PORT, GPIO_PIN[Led], GPIO_PIN_SET);
-  }
-}
-
-
-void BSP_LED_Toggle(Led_TypeDef Led){
-  if (Led < 3)  {
-     HAL_GPIO_TogglePin(LED_GPIO_PORT, GPIO_PIN[Led]);
-  }
+void BSP_LED_Set(Led_TypeDef Led) {
+	for (int i = 0; i < LED_NUMBER_PIN_COUNT; ++i)
+		HAL_GPIO_WritePin(LED_GPIO_PORT, led_number_pins[i], led_num_status[Led][i] ? GPIO_PIN_RESET : GPIO_PIN_SET); // active low
 }
 
 
