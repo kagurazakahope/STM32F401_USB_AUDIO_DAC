@@ -15,6 +15,13 @@ uint16_t led_number_pins[LED_NUMBER_PIN_COUNT] = {
     GPIO_PIN_7,
 };
 
+int led_num_status[LED_MAX][LED_NUMBER_PIN_COUNT] = {
+    [LED_4] = {0,1,1,0,0,1,1},
+    [LED_8] = {1,1,1,1,1,1,1},
+    [LED_9] = {1,1,1,1,0,1,1},
+    [LED_NONE] = {0,0,0,0,0,0,0},
+};
+
 void bsp_init(void) {
 	BSP_PB_Init();
 	BSP_LED_Init();
