@@ -3,7 +3,7 @@
 ## Features
 
 * USB Full Speed Class 1 Audio device, no special drivers needed
-* Isochronous with endpoint feedback (3bytes, 10.14 format) to synchronize sampling frequency Fs
+* Isochronous with endpoint feedback (3bytes, 10.14 format) to synchronize sampling frequency
 * Bus powered
 * Supports 24-bit audio streams with Fs = 44.1kHz, 48kHz or 96kHz
 * USB Audio Volume (0dB to -96dB, 3dB steps) and Mute control 
@@ -14,28 +14,20 @@
 * Build support (Makefile option) for STM32F401CCU6 and STM32F411CEU6 boards 
 * Optional MCLK output generation on STM32F411
 
-I now understand why there is a market for audiophile DACs with higher end headphones. I was given a pair of used Grado SR60 headphones a long time ago and
-was unimpressed. With my laptop and smartphone headphone outputs they didn't sound great compared to my budget earbuds. In fact, they were lacking in bass response. And they are bulky, with a heavy cable. So they've been in a cupboard for the past 16-17 years.
+## Wish List
 
-I first noticed that my old iPhone SE standard wired earbuds sounded remarkably good with the USB-DAC, much better than my other budget earbuds and
-my cheap but comfortable Sennheiser PX60 headphones.
+* 32bit support
+* MCLK support with other F401 models with 64 or more pins
+* UAC 2 if ?
 
-I retrieved the Grado headphones and tried them out, the difference is astonishing.  I'm no golden-ears audiophile, but 
-the amount of detail and frequency response is remarkable. I'm kind of surprised that the DACs on brand name (Lenovo & Vaio) laptops are
-so poor in quality, but have a look at this [Cambridge Audio website](https://www.cambridgeaudio.com/row/en/blog/our-guide-usb-audio-why-should-i-use-it?fbclid=IwAR33SS0e_jNiQ1tBSOj29KdEOi1mhHn1r87bMg-VyAMmR2NeSmKETod-JkY#:~:text=Class%201%20will%20give%20you,step%20up%20to%20Class%202) comparing a dedicated USB Audio Class 1 DAC to a laptop headphone output. I have to agree with them.
-
-I normally re-cycle my prototype modules for new projects, but I am now using this setup as a permanent headphone driver, and my Grado phones
-are back in service.
-
-When the USB Audio DAC device is enumerated on plug-in, it reports its capabilities (audio class, sampling frequency options, bit depth). If you configure the audio device driver optimally, a native 96kHZ 24bit audio file will play unmodified, while a 44.1kHz or 48kHz 16bit stream will be resized to 24bits and resampled to 96kHz. And yes, even 44.1kHz/16bit MP3 files sound much better when played back via the USB DAC. I'm not sure why - the PCM5102A isn't marketed as an "audiophile" component, but it obviously can drive high-quality headphones much better than standard laptop/smartphone DAC components.
+16bit data will be padded to 24bit. However 44.1 and 48 kHz data will NOT be resampled if you setup correctly. On Windows if you allow exclusive access for the device and you select WSAPI as Foobar's output, then it will switch to corresponding Fs to the actual sample rate of your source file when you play it. But otherwise there will be resampling on PC side.
 
 ## Credits
-* [Dragonman USB Audio project](https://github.com/dragonman225/stm32f469-usbaudio)
-* [Endpoint feedback](https://www.microchip.com/forums/m547546.aspx)
+* [har-in-air/STM32F411_USB_AUDIO_DAC](https://github.com/har-in-air/STM32F411_USB_AUDIO_DAC) where I originally forked from
+
 
 ## Software Development Environment
-* Ubuntu 20.04 AMDx64
-* STM32CubeIDE v1.6.0
+* Debian 11 in WSL on Windows 10 with GCC 10
 * STM32 F4 library v1.26.1
 * Makefile project. Edit makefile flags to
   * Select STM32F411 or STM32F401
@@ -44,9 +36,9 @@ When the USB Audio DAC device is enumerated on plug-in, it reports its capabilit
 
 ## Hardware
 
-* WeAct STM32F411CEU6 or STM32F401CCU6 "Black Pill" development board
+* TAOBAO STM32F4 core board / mini board with 2x19 or 2x22 pins
 	* I2S_2 peripheral interface generates WS, BCK, SDO and optionally MCK
-	* external R,G,B LEDs indicate sampling frequency
+	* external 7-segment LED indicate sampling frequency
 	* On-board LED for diagnostic status
 	* UART2 serial interface for diagnostic information
 * ES9023 I2S DAC module
@@ -61,32 +53,30 @@ B12     LRCK        I2S_WS (LR Clock)
 GND     DIF         Format = I2S
 A8      MUTE_B      Mute control
 A6      -           I2S_MCK (not used)
-
-
-LED 7/8 bits for frequence display
+--------------------------------------------------------------------
+C13     on-board    Diagnostic
+--------------------------------------------------------------------
+A11     USB_D-      USB data
+A12     USB_D+
+A2      TX          Serial debug
+A3      RX
+PA0                 KEY button. Triggers endpoint  
+                    feedback printout if enabled with  
+                    DEBUG_FEEDBACK_ENDPOINT
+--------------------------------------------------------------------
+7-segment LED for frequence display
 4 = 44.1kHz
 8 = 48kHz
 9 = 96kHz
 F4xx    LED pin
 --------------------------------------------------------------------
-B0
-B1
-B3
-B4
-B5
-B6
-B7
-
-C13     on-board    Diagnostic
---------------------------------------------------------------------
-A11                        USB_D-   USB data
-A12                        USB_D+
-A2                         TX       Serial debug
-A3                         RX
-GND                        GND
-PA0                                 KEY button. Triggers endpoint  
-                                    feedback printout if enabled with  
-                                    DEBUG_FEEDBACK_ENDPOINT
+B0      a
+B1      b
+B3      c
+B4      d
+B5      e
+B6      f
+B7      g
 --------------------------------------------------------------------
 ```    
 
@@ -152,8 +142,3 @@ based on the deviation from the nominal pointer distance. We want to avoid the w
 This is a debug log of changes in Fs due to the implemented mechanism. The first datum is the SOF frame counter, the second is the pointer distance in samples, the third is the feedback Fs. As you can see, the feedback is able to minimize changes in pointer distance AND oscillations in Fs frequency.
 
 <img src="docs/endpoint_feedback.png" />
-
-
-
-
-
