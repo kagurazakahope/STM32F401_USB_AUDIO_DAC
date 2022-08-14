@@ -77,7 +77,9 @@ void BSP_OnboardLED_Toggle(void) {
 
 void BSP_LED_Set(Led_TypeDef Led) {
 	for (int i = 0; i < LED_NUMBER_PIN_COUNT; ++i)
-		HAL_GPIO_WritePin(LED_GPIO_PORT, led_number_pins[i], led_num_status[Led][i] ? GPIO_PIN_RESET : GPIO_PIN_SET); // active low
+		// Since STM32F4x1 has sum(Iio) +- 120 mA, we need MOSFET to drive the LED,
+		//  so with a common anode LED it's easier if active-high
+		HAL_GPIO_WritePin(LED_GPIO_PORT, led_number_pins[i], led_num_status[Led][i] ? GPIO_PIN_SET : GPIO_PIN_RESET);
 }
 
 
