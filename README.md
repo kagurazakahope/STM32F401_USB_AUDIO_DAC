@@ -80,44 +80,6 @@ B7      g
 --------------------------------------------------------------------
 ```    
 
-<img src="docs/prototype.jpg" />
-
-## Checking USB Audio device on Ubuntu 20.04
-
-* Execute `lsusb` with and without the USB-Audio DAC plugged in, you should see the 
-  new USB device
-  
-<img src="docs/lsusb.png" />
-  
-* Execute `aplay -L` and look for `PCM5102 DAC`
-
-<img src="docs/aplay_output.png" />
-
-* Run the `Sound` application without the USB-Audio DAC plugged in and check the
-  Speaker/Headphone output options
-* Plug in the USB-Audio DAC and check again, you should see at least one new option.
-  Select this for playing sound output via the USB-Audio DAC
-* Execute `cat /proc/asound/DAC/stream0` when a song is playing
-
-<img src="docs/stream.png" />
-
-## Optimizing Pulseaudio on Ubuntu 20.04 for USB-Audio DAC
-
-* Edit `/etc/pulse/daemon.conf` as root
-* Force re-sampling to 96kHz
-* Resize to 24bits
-* Use highest quality re-sampling algorithm
-* Save file, log out and log in again for the changes to take effect
-
-<img src="docs/pulseaudio_config.png" />
-
-## Optimizing Windows 10 for USB-Audio DAC
-
-* Use the Control Panel Sound playback device properties dialog
-
-<img src="docs/win10_96kHz_24bit.png" />
-
-
 ## Endpoint Feedback mechanism
 
 <img src="docs/feedback_endpoint_spec.png" />
