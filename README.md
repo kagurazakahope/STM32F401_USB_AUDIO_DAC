@@ -36,6 +36,8 @@
 
 ## Hardware
 
+LCEDA public project https://oshwhub.com/xmlxml/usb_dac_stm32
+
 * TAOBAO STM32F4 core board / mini board with 2x19 or 2x22 pins
 	* I2S_2 peripheral interface generates WS, BCK, SDO and optionally MCK
 	* external 7-segment LED indicate sampling frequency
