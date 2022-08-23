@@ -6,13 +6,13 @@ void Error_Handler(void);
 volatile uint32_t BtnPressed = 0;
 
 uint16_t led_number_pins[LED_NUMBER_PIN_COUNT] = {
-    GPIO_PIN_0,
-    GPIO_PIN_1,
     GPIO_PIN_3,
     GPIO_PIN_4,
     GPIO_PIN_5,
     GPIO_PIN_6,
     GPIO_PIN_7,
+    GPIO_PIN_8,
+    GPIO_PIN_9,
 };
 
 int led_num_status[LED_MAX][LED_NUMBER_PIN_COUNT] = {
